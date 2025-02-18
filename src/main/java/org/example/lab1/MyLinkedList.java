@@ -53,7 +53,7 @@ public class MyLinkedList<T> {
      * @return элемент на указанном индексе.
      * @throws IndexOutOfBoundsException если индекс отрицательный или выходит за пределы списка.
      */
-    public T getElement(int index) {
+    public T getElement(int index) throws IndexOutOfBoundsException {
         T result = null;
         if (index < 0) throw new IndexOutOfBoundsException("Индекс не может быть отрицательным");
 
@@ -78,7 +78,7 @@ public class MyLinkedList<T> {
      * @throws IndexOutOfBoundsException если индекс отрицательный или выходит за пределы списка.
      * @throws IllegalStateException     если список пуст при попытке удаления.
      */
-    public void removeElement(int index) {
+    public void removeElement(int index) throws IndexOutOfBoundsException, IllegalStateException {
         if (index < 0) throw new IndexOutOfBoundsException("Индекс не может быть отрицательным");
 
         if (head == null) throw new IllegalStateException("Список пуст");
