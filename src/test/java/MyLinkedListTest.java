@@ -3,8 +3,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Тестовый класс для проверки функциональности класса MyLinkedList.
+ */
 public class MyLinkedListTest {
 
+    /**
+     * Проверяет добавление элемента в пустой список.
+     */
     @Test
     void testAddElementToEmptyList() {
         MyLinkedList<Integer> list = new MyLinkedList<>();
@@ -12,6 +18,9 @@ public class MyLinkedListTest {
         assertEquals("100", list.toString());
     }
 
+    /**
+     * Проверяет добавление нескольких элементов в список.
+     */
     @Test
     void testAddMultipleElements() {
         MyLinkedList<Integer> list = new MyLinkedList<>();
@@ -22,6 +31,9 @@ public class MyLinkedListTest {
         assertEquals("1 2 3 4", list.toString());
     }
 
+    /**
+     * Проверяет удаление элемента из середины списка.
+     */
     @Test
     void testRemoveMiddleElement() {
         MyLinkedList<Integer> list = new MyLinkedList<>();
@@ -34,6 +46,9 @@ public class MyLinkedListTest {
         assertEquals("10 30 40", list.toString());
     }
 
+    /**
+     * Проверяет удаление последнего элемента из списка.
+     */
     @Test
     void testRemoveLastElement() {
         MyLinkedList<Integer> list = new MyLinkedList<>();
@@ -44,6 +59,9 @@ public class MyLinkedListTest {
         assertEquals("5", list.toString());
     }
 
+    /**
+     * Проверяет удаление первого и последнего элементов из списка.
+     */
     @Test
     void testRemoveFirstAndLastElements() {
         MyLinkedList<Integer> list = new MyLinkedList<>();
@@ -59,6 +77,9 @@ public class MyLinkedListTest {
         assertEquals("", list.toString());
     }
 
+    /**
+     * Проверяет добавление дублирующихся элементов и их корректное отображение.
+     */
     @Test
     void testAddDuplicateElements() {
         MyLinkedList<Integer> list = new MyLinkedList<>();
@@ -71,6 +92,9 @@ public class MyLinkedListTest {
         assertEquals(10, list.getElement(1));
     }
 
+    /**
+     * Проверяет получение первого и последнего элементов из списка.
+     */
     @Test
     void testGetFirstAndLastElements() {
         MyLinkedList<String> list = new MyLinkedList<>();
@@ -81,6 +105,10 @@ public class MyLinkedListTest {
         assertEquals("Second", list.getElement(1));
     }
 
+    /**
+     * Проверяет получение элемента из списка с единственным элементом.
+     * Также проверяет выброс исключения при выходе за пределы.
+     */
     @Test
     void testGetFromSingleItemList() {
         MyLinkedList<String> list = new MyLinkedList<>();
@@ -94,6 +122,10 @@ public class MyLinkedListTest {
         });
     }
 
+    /**
+     * Проверяет удаление единственного элемента из списка и выброс исключения
+     * при попытке удаления из пустого списка.
+     */
     @Test
     void testRemoveFromSingleItemList() {
         MyLinkedList<String> list = new MyLinkedList<>();
