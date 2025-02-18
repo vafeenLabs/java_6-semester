@@ -3,12 +3,40 @@ package org.example.lab3;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Класс ListPerformanceComparator используется для сравнения производительности
+ * операций над списками, реализованными с помощью ArrayList и LinkedList.
+ *
+ * Он измеряет время выполнения различных операций, таких как добавление,
+ * удаление и получение элементов, при разном количестве вызовов.
+ */
 public class ListPerformanceComparator {
+    /**
+     * Начальное количество выполнений операций.
+     */
     private static final int INITIAL_EXECUTIONS_COUNT = 1000;
-    private static final int MAX_EXECUTIONS_COUNT = 4000;
+
+    /**
+     * Максимальное количество выполнений операций.
+     */
+    private static final int MAX_EXECUTIONS_COUNT = 8000;
+
+    /**
+     * Множитель для увеличения количества выполнений операций.
+     */
     private static final int EXECUTIONS_COUNT_MULTIPLIER = 2;
+
+    /**
+     * Размер списков, используемых для тестирования.
+     */
     private static final int LIST_SIZE = 100000;
 
+    /**
+     * Основной метод для сравнения производительности ArrayList и LinkedList.
+     *
+     * Создает списки заданного размера и выполняет тесты с увеличивающимся
+     * количеством вызовов операций (от начального до максимального значения).
+     */
     static void compare() {
         var arrayList = new ArrayList<Integer>(LIST_SIZE);
         var linkedList = new LinkedList<Integer>();
@@ -24,6 +52,13 @@ public class ListPerformanceComparator {
         } while (invokesCount <= MAX_EXECUTIONS_COUNT);
     }
 
+    /**
+     * Сравнивает производительность различных операций над ArrayList и LinkedList.
+     *
+     * @param arrayList список на основе ArrayList для тестирования.
+     * @param linkedList список на основе LinkedList для тестирования.
+     * @param executionsCount количество раз, которое будет выполнена каждая операция.
+     */
     private static void compareListPerformance(ArrayList<Integer> arrayList, LinkedList<Integer> linkedList, int executionsCount) {
         var arrayListAddToHeadTime = measureExecutionTime(executionsCount, () -> arrayList.add(0));
         var linkedListAddToHeadTime = measureExecutionTime(executionsCount, () -> linkedList.add(0));
@@ -66,6 +101,13 @@ public class ListPerformanceComparator {
 
     }
 
+    /**
+     * Измеряет время выполнения указанного количества операций.
+     *
+     * @param executionsCount количество раз выполнения задачи.
+     * @param task задача (операция), которую нужно выполнить.
+     * @return время выполнения операции в наносекундах.
+     */
     private static long measureExecutionTime(int executionsCount, Runnable task) {
         return calculateTime(() -> {
             for (int i = 0; i < executionsCount; ++i) {
@@ -74,6 +116,12 @@ public class ListPerformanceComparator {
         });
     }
 
+    /**
+     * Измеряет время выполнения одной задачи (операции).
+     *
+     * @param task задача (операция), которую нужно выполнить.
+     * @return время выполнения операции в наносекундах.
+     */
     private static long calculateTime(Runnable task) {
         long startNano = System.nanoTime();
         task.run();
