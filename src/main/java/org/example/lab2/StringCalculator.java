@@ -5,12 +5,25 @@ import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
 
-
+/**
+ * Класс StringCalculator предназначен для вычисления арифметических выражений,
+ * представленных в инфиксной нотации. Он поддерживает операции сложения, вычитания,
+ * умножения и деления, а также работу со скобками.
+ */
 public class StringCalculator {
+
+    /**
+     * Вычисляет значение арифметического выражения.
+     *
+     * @param expression строка, представляющая арифметическое выражение.
+     * @return результат вычисления выражения.
+     * @throws IllegalArgumentException если выражение содержит недопустимые символы или имеет неверный формат.
+     * @throws ArithmeticException если происходит деление на ноль.
+     */
     public double evaluate(String expression) throws IllegalArgumentException, ArithmeticException {
         expression = expression.replaceAll("\\s", "");
 
-        // list of tokens on postfix notation
+        // список токенов в постфиксной нотации
         List<String> tokens = infixToPostfix(expression);
 
         Stack<Double> operands = new Stack<>();
@@ -28,6 +41,13 @@ public class StringCalculator {
         return operands.pop();
     }
 
+    /**
+     * Преобразует инфиксное выражение в постфиксную нотацию (обратная польская нотация).
+     *
+     * @param infixExpression строка, представляющая инфиксное выражение.
+     * @return список строк, представляющий постфиксное выражение.
+     * @throws IllegalArgumentException если выражение имеет неверный формат.
+     */
     private List<String> infixToPostfix(String infixExpression) {
         List<String> postfixList = new ArrayList<>();
         Stack<Character> stack = new Stack<>();
@@ -51,7 +71,7 @@ public class StringCalculator {
                     while (!stack.isEmpty() && stack.peek() != '(') {
                         postfixList.add(String.valueOf(stack.pop()));
                     }
-                    stack.pop(); // Discard '('
+                    stack.pop(); // Удаляем '('
                     expectingOperand = false;
                 } else if (isOperator(ch)) {
                     while (!stack.isEmpty() && precedence(ch) <= precedence(stack.peek())) {
@@ -74,6 +94,12 @@ public class StringCalculator {
         return postfixList;
     }
 
+    /**
+     * Возвращает приоритет оператора.
+     *
+     * @param operator оператор, для которого нужно получить приоритет.
+     * @return целочисленный приоритет оператора.
+     */
     private int precedence(char operator) {
         return switch (operator) {
             case '+', '-' -> 1;
@@ -82,6 +108,12 @@ public class StringCalculator {
         };
     }
 
+    /**
+     * Проверяет, является ли строка числом.
+     *
+     * @param str строка для проверки.
+     * @return true, если строка является числом; false в противном случае.
+     */
     private boolean isNumeric(String str) {
         try {
             Double.parseDouble(str);
@@ -91,10 +123,26 @@ public class StringCalculator {
         }
     }
 
+    /**
+     * Проверяет, является ли символ оператором.
+     *
+     * @param operator символ для проверки.
+     * @return true, если символ является оператором; false в противном случае.
+     */
     private boolean isOperator(Character operator) {
         return operator == '+' || operator == '-' || operator == '*' || operator == '/';
     }
 
+    /**
+     * Выполняет арифметическую операцию над двумя операндами.
+     *
+     * @param operator оператор для выполнения операции.
+     * @param a первый операнд.
+     * @param b второй операнд.
+     * @return результат операции.
+     * @throws ArithmeticException если происходит деление на ноль.
+     * @throws IllegalArgumentException если оператор не распознан.
+     */
     private double performOperation(char operator, double a, double b) {
         return switch (operator) {
             case '+' -> a + b;
