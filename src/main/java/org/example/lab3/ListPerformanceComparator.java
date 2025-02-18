@@ -1,0 +1,84 @@
+package org.example.lab3;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public class ListPerformanceComparator {
+    private static final int INITIAL_EXECUTIONS_COUNT = 1000;
+    private static final int MAX_EXECUTIONS_COUNT = 4000;
+    private static final int EXECUTIONS_COUNT_MULTIPLIER = 2;
+    private static final int LIST_SIZE = 100000;
+
+    static void compare() {
+        var arrayList = new ArrayList<Integer>(LIST_SIZE);
+        var linkedList = new LinkedList<Integer>();
+        for (int i = 0; i < LIST_SIZE; ++i) {
+            arrayList.add(0);
+            linkedList.add(0);
+        }
+        int invokesCount = INITIAL_EXECUTIONS_COUNT;
+        do {
+            compareListPerformance(arrayList, linkedList, invokesCount);
+            System.out.println();
+            invokesCount *= EXECUTIONS_COUNT_MULTIPLIER;
+        } while (invokesCount <= MAX_EXECUTIONS_COUNT);
+    }
+
+    private static void compareListPerformance(ArrayList<Integer> arrayList, LinkedList<Integer> linkedList, int executionsCount) {
+        var arrayListAddToHeadTime = measureExecutionTime(executionsCount, () -> arrayList.add(0));
+        var linkedListAddToHeadTime = measureExecutionTime(executionsCount, () -> linkedList.add(0));
+
+        var arrayListRemoveFromHeadTime = measureExecutionTime(executionsCount, arrayList::removeFirst);
+        var linkedListRemoveFromHeadTime = measureExecutionTime(executionsCount, linkedList::removeFirst);
+
+        var arrayListAddToMiddleTime = measureExecutionTime(executionsCount, () -> arrayList.add(arrayList.size() / 2, 0));
+        var linkedListAddToMiddleTime = measureExecutionTime(executionsCount, () -> linkedList.add(linkedList.size() / 2, 0));
+
+        var arrayListRemoveFromMiddleTime = measureExecutionTime(executionsCount, () -> arrayList.remove(arrayList.size() / 2));
+        var linkedListRemoveFromMiddleTime = measureExecutionTime(executionsCount, () -> linkedList.remove(linkedList.size() / 2));
+
+        var arrayListAddToEndTime = measureExecutionTime(executionsCount, () -> arrayList.add(arrayList.size(), 0));
+        var linkedListAddToEndTime = measureExecutionTime(executionsCount, () -> linkedList.add(linkedList.size(), 0));
+
+        var arrayListRemoveFromEndTime = measureExecutionTime(executionsCount, arrayList::removeLast);
+        var linkedListRemoveFromEndTime = measureExecutionTime(executionsCount, linkedList::removeLast);
+
+        var arrayListGetFromHeadTime = measureExecutionTime(executionsCount, () -> arrayList.get(0));
+        var linkedListGetFromHeadTime = measureExecutionTime(executionsCount, () -> linkedList.get(0));
+
+        var arrayListGetFromMiddleTime = measureExecutionTime(executionsCount, () -> arrayList.get(arrayList.size() / 2));
+        var linkedListGetFromMiddleTime = measureExecutionTime(executionsCount, () -> linkedList.get(linkedList.size() / 2));
+
+        var arrayListGetFromEndTime = measureExecutionTime(executionsCount, arrayList::getLast);
+        var linkedListGetFromEndTime = measureExecutionTime(executionsCount, linkedList::getLast);
+
+        System.out.printf("Количество выполнений: %s\n", executionsCount);
+        System.out.print("Операция            | Array List | Linked List\n");
+        System.out.printf("Добавить в начало     | %10s | %11s\n", arrayListAddToHeadTime, linkedListAddToHeadTime);
+        System.out.printf("Добавить в середину   | %10s | %11s\n", arrayListAddToMiddleTime, linkedListAddToMiddleTime);
+        System.out.printf("Добавить в конец      | %10s | %11s\n", arrayListAddToEndTime, linkedListAddToEndTime);
+        System.out.format("Удалить из начала    | %10s | %11s\n", arrayListRemoveFromHeadTime, linkedListRemoveFromHeadTime);
+        System.out.printf("Удалить из середины  | %10s | %11s\n", arrayListRemoveFromMiddleTime, linkedListRemoveFromMiddleTime);
+        System.out.printf("Удалить из конца     | %10s | %11s\n", arrayListRemoveFromEndTime, linkedListRemoveFromEndTime);
+        System.out.printf("Получить из начала    | %10s | %11s\n", arrayListGetFromHeadTime, linkedListGetFromHeadTime);
+        System.out.printf("Получить из середины  | %10s | %11s\n", arrayListGetFromMiddleTime, linkedListGetFromMiddleTime);
+        System.out.printf("Получить из конца     | %10s | %11s\n", arrayListGetFromEndTime, linkedListGetFromEndTime);
+
+    }
+
+    private static long measureExecutionTime(int executionsCount, Runnable task) {
+        return calculateTime(() -> {
+            for (int i = 0; i < executionsCount; ++i) {
+                task.run();
+            }
+        });
+    }
+
+    private static long calculateTime(Runnable task) {
+        long startNano = System.nanoTime();
+        task.run();
+        long endNano = System.nanoTime();
+        return endNano - startNano;
+    }
+}
+
