@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
+import java.util.*;
 
 /**
  * Класс StringCalculator предназначен для вычисления арифметических выражений,
@@ -23,7 +24,11 @@ public class StringCalculator {
     public double evaluate(String expression) throws IllegalArgumentException, ArithmeticException {
         expression = expression.replaceAll("\\s", "");
 
-        // список токенов в постфиксной нотации
+        if (expression.isEmpty()) {
+            throw new IllegalArgumentException("Expression is empty");
+        }
+
+        // Преобразуем инфиксное выражение в постфиксную нотацию
         List<String> tokens = infixToPostfix(expression);
 
         Stack<Double> operands = new Stack<>();
@@ -32,10 +37,17 @@ public class StringCalculator {
             if (isNumeric(token)) {
                 operands.push(Double.parseDouble(token));
             } else {
+                if (operands.size() < 2) {
+                    throw new IllegalArgumentException("Invalid expression: not enough operands for operator " + token);
+                }
                 double operand2 = operands.pop();
                 double operand1 = operands.pop();
                 operands.push(performOperation(token.charAt(0), operand1, operand2));
             }
+        }
+
+        if (operands.size() != 1) {
+            throw new IllegalArgumentException("Invalid expression: unbalanced operators and operands");
         }
 
         return operands.pop();
@@ -71,6 +83,9 @@ public class StringCalculator {
                     while (!stack.isEmpty() && stack.peek() != '(') {
                         postfixList.add(String.valueOf(stack.pop()));
                     }
+                    if (stack.isEmpty()) {
+                        throw new IllegalArgumentException("Mismatched parentheses");
+                    }
                     stack.pop(); // Удаляем '('
                     expectingOperand = false;
                 } else if (isOperator(ch)) {
@@ -80,15 +95,18 @@ public class StringCalculator {
                     stack.push(ch);
                     expectingOperand = true;
                 } else {
-                    throw new IllegalArgumentException("Unknown symbol in expression");
+                    throw new IllegalArgumentException("Unknown symbol in expression: " + ch);
                 }
             }
 
             while (!stack.isEmpty()) {
+                if (stack.peek() == '(') {
+                    throw new IllegalArgumentException("Mismatched parentheses");
+                }
                 postfixList.add(String.valueOf(stack.pop()));
             }
         } catch (EmptyStackException e) {
-            throw new IllegalArgumentException("Illegal expression");
+            throw new IllegalArgumentException("Invalid expression format");
         }
 
         return postfixList;
