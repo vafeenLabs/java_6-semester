@@ -6,7 +6,7 @@ import java.util.LinkedList;
 /**
  * Класс ListPerformanceComparator используется для сравнения производительности
  * операций над списками, реализованными с помощью ArrayList и LinkedList.
- *
+ * <p>
  * Он измеряет время выполнения различных операций, таких как добавление,
  * удаление и получение элементов, при разном количестве вызовов.
  */
@@ -33,7 +33,7 @@ public class ListPerformanceComparator {
 
     /**
      * Основной метод для сравнения производительности ArrayList и LinkedList.
-     *
+     * <p>
      * Создает списки заданного размера и выполняет тесты с увеличивающимся
      * количеством вызовов операций (от начального до максимального значения).
      */
@@ -55,15 +55,15 @@ public class ListPerformanceComparator {
     /**
      * Сравнивает производительность различных операций над ArrayList и LinkedList.
      *
-     * @param arrayList список на основе ArrayList для тестирования.
-     * @param linkedList список на основе LinkedList для тестирования.
+     * @param arrayList       список на основе ArrayList для тестирования.
+     * @param linkedList      список на основе LinkedList для тестирования.
      * @param executionsCount количество раз, которое будет выполнена каждая операция.
      */
     private static void compareListPerformance(ArrayList<Integer> arrayList, LinkedList<Integer> linkedList, int executionsCount) {
         var arrayListAddToHeadTime = measureExecutionTime(executionsCount, () -> arrayList.add(0));
         var linkedListAddToHeadTime = measureExecutionTime(executionsCount, () -> linkedList.add(0));
 
-        var arrayListRemoveFromHeadTime = measureExecutionTime(executionsCount, arrayList::removeFirst);
+        var arrayListRemoveFromHeadTime = measureExecutionTime(executionsCount, () -> arrayList.remove(0));
         var linkedListRemoveFromHeadTime = measureExecutionTime(executionsCount, linkedList::removeFirst);
 
         var arrayListAddToMiddleTime = measureExecutionTime(executionsCount, () -> arrayList.add(arrayList.size() / 2, 0));
@@ -75,7 +75,7 @@ public class ListPerformanceComparator {
         var arrayListAddToEndTime = measureExecutionTime(executionsCount, () -> arrayList.add(arrayList.size(), 0));
         var linkedListAddToEndTime = measureExecutionTime(executionsCount, () -> linkedList.add(linkedList.size(), 0));
 
-        var arrayListRemoveFromEndTime = measureExecutionTime(executionsCount, arrayList::removeLast);
+        var arrayListRemoveFromEndTime = measureExecutionTime(executionsCount, () -> arrayList.remove(arrayList.size() - 1));
         var linkedListRemoveFromEndTime = measureExecutionTime(executionsCount, linkedList::removeLast);
 
         var arrayListGetFromHeadTime = measureExecutionTime(executionsCount, () -> arrayList.get(0));
@@ -84,7 +84,7 @@ public class ListPerformanceComparator {
         var arrayListGetFromMiddleTime = measureExecutionTime(executionsCount, () -> arrayList.get(arrayList.size() / 2));
         var linkedListGetFromMiddleTime = measureExecutionTime(executionsCount, () -> linkedList.get(linkedList.size() / 2));
 
-        var arrayListGetFromEndTime = measureExecutionTime(executionsCount, arrayList::getLast);
+        var arrayListGetFromEndTime = measureExecutionTime(executionsCount, () -> arrayList.get(arrayList.size() - 1));
         var linkedListGetFromEndTime = measureExecutionTime(executionsCount, linkedList::getLast);
 
         System.out.printf("Количество выполнений: %s\n", executionsCount);
@@ -105,7 +105,7 @@ public class ListPerformanceComparator {
      * Измеряет время выполнения указанного количества операций.
      *
      * @param executionsCount количество раз выполнения задачи.
-     * @param task задача (операция), которую нужно выполнить.
+     * @param task            задача (операция), которую нужно выполнить.
      * @return время выполнения операции в наносекундах.
      */
     private static long measureExecutionTime(int executionsCount, Runnable task) {
